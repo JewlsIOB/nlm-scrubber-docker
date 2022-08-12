@@ -25,7 +25,7 @@ Example call:
 
     docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" radaisystems/nlm-scrubber:latest
 
-###FAQs
+### FAQs
 * The scrubber requires files to be ASCII encoded.  If nothing happens with a file, it could be in the wrong format.
 * LDS_date: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so the only way to filter these out is to generate a list of all dates in this format in preserved.nci2.txt
 
