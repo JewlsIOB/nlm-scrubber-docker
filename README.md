@@ -17,6 +17,17 @@ Once run the container will deidentify anything in `/tmp/once_off/input` and out
 
 Mounting a local volume to `/tmp/once_off/input` and another to `/tmp/once_off/output` will allow you to deidentify and save items on your host machine.
 
+You can mount a local volume to `/tmp/once_off/preserved.nci2.txt` or `/tmp/once_off/redacted.nci2.txt` to add addition terms to preserve or redact form the document.
+
+You also can choose to define the environment variables `LDS_date`, `LDS_address`, or `LDS_age`. If you define them, these flags will be set in the config file, turning off the redaction of those elements.
+
+Example call:
+
+    docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" radaisystems/nlm-scrubber:latest
+
+###FAQs
+* The scrubber requires files to be ASCII encoded.  If nothing happens with a file, it could be in the wrong format.
+* LDS_date: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so the only way to filter these out is to generate a list of all dates in this format in preserved.nci2.txt
 
 ## scrub.sh
 
