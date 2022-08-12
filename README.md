@@ -11,7 +11,7 @@ This package includes three components-
 
 ## Docker
 
-The docker image can be downloaded from [docker hub](https://hub.docker.com/r/radaisystems/nlm-scrubber) or built via `make build`.
+The docker image can be downloaded from [docker hub](https://hub.docker.com/r/jewlsiob/nlm-scrubber) or built via `make build`.
 
 Once run the container will deidentify anything in `/tmp/once_off/input` and output it to `/tmp/once_off/output` (these directories are *inside* the container). The input files can be limited by defining the `SCRUBBER_REGEX` environmental variables.
 
@@ -23,7 +23,7 @@ You also can choose to define the environment variables `LDS_date`, `LDS_address
 
 Example call:
 
-    docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" radaisystems/nlm-scrubber:latest
+    docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" jewlsiob/nlm-scrubber:latest
 
 ### FAQs
 * The scrubber requires files to be ASCII encoded.  If nothing happens with a file, it could be in the wrong format.
