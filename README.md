@@ -19,7 +19,7 @@ Mounting a local volume to `/tmp/once_off/input` and another to `/tmp/once_off/o
 
 You can mount a local volume to `/tmp/once_off/preserved.nci2.txt` or `/tmp/once_off/redacted.nci2.txt` to add addition terms to preserve or redact form the document.
 
-You also can choose to define the environment variables `LDS_date`, `LDS_address`, or `LDS_age`. If you define them, these flags will be set in the config file, turning off the redaction of those elements.
+You also can choose to define the environment variables `KEEP_DATES`, `KEEP_ADDRESSES`, or `KEEP_AGES` (for ages over 89). If you define them, these flags will be set in the config file, turning off the redaction of those elements.
 
 Example call:
 
