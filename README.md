@@ -1,6 +1,17 @@
-# NLM Scrubber Wrappers
+# Overview
 
-This package wraps the [NLM Scrubber](https://scrubber.nlm.nih.gov/) to make it easily accessible for a variety of programs.
+This package provides docker (and other) wrappers to the [National Library of Medicine HIPAA scrubber](https://scrubber.nlm.nih.gov/).
+The NLM Scrubber currently does not work on Macs, so the docker version adds the ability to run the NLM scrubber on a Mac.
+
+The Docker image has some additional benefits over the other components here:
+
+1. It adds additional options to support v.19 of the NLM Scrubber.
+   This includes allowing for preserving dates, ages over 89, (addresses coming soon), and specifying
+   a preserved terms or redacted terms file.
+
+2. It expands upon the NLM Scrubber functionality to allow preservation of SQL-formatted dates (e.g. 2022-09-22).
+
+# NLM Scrubber Wrappers
 
 This package includes three components-
 
@@ -21,13 +32,15 @@ You can mount a local volume to `/tmp/once_off/preserved.nci2.txt` or `/tmp/once
 
 You also can choose to define the environment variables `KEEP_DATES`, `KEEP_ADDRESSES`, or `KEEP_AGES` (for ages over 89). If you define them, these flags will be set in the config file, turning off the redaction of those elements.
 
+`KEEP_SQL_DATES` preserves sql-formatted dates as well -- e.g. 2022-09-22.
+
 Example call:
 
     docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" jewlsiob/nlm-scrubber:latest
 
 ### FAQs
 * The scrubber requires files to be ASCII encoded.  If nothing happens with a file, it could be in the wrong format.
-* LDS_date: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so the only way to filter these out is to generate a list of all dates in this format in preserved.nci2.txt
+* KEEP_DATES: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
 
 ## scrub.sh
 
@@ -49,3 +62,7 @@ This library does not use the docker container and depends on the nlm-scrubber b
 To work with the `nlm_scrubber` application this library dynamically generates a config, writes all of the supplied strings to disk, and then reads the outputted data back before erasing all of the files it wrote.
 
 There is a significant delay when the application is being loaded- as such it is far more efficient to batch data than to run it through individually.
+
+## Credits
+
+This package builds upon and extends upon the great work of [radaisystems/nlm-scrubber-docker](https://github.com/radaisystems/nlm-scrubber-docker)!
