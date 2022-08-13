@@ -7,9 +7,11 @@ COPY build/nlm_scrubber /opt/nlm_scrubber
 RUN chmod +x /opt/nlm_scrubber
 
 COPY pyscrubber.py /opt/pyscrubber.py
-RUN chmod +x /opt/pyscrubber.py
+#RUN chmod +x /opt/pyscrubber.py
 
 COPY docker/entrypoint.sh /opt/entrypoint.sh
-RUN chmod +x /opt/entrypoint.sh
+#RUN chmod +x /opt/entrypoint.sh
+
+COPY docker/addons/sql_dates.nci2.txt /opt/sql_dates.nci2.txt
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
