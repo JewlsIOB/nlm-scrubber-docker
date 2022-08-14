@@ -1,68 +1,90 @@
-# Overview
+## HIPAA Scrubbing
 
-This package provides docker (and other) wrappers to the [National Library of Medicine HIPAA scrubber](https://scrubber.nlm.nih.gov/).
-The NLM Scrubber currently does not work on Macs, so the docker version adds the ability to run the NLM scrubber on a Mac.
+This package provides a docker wrapper to v.19 of the [National Library of Medicine HIPAA scrubber](https://scrubber.nlm.nih.gov/).
+It allows you to remove in bulk HIPAA information from medical documentation in various text/csv formats.
 
-The Docker image has some additional benefits over the other components here:
+The Docker image adds some additional functionality on top of the NLM Scrubber:
 
-1. It adds additional options to support v.19 of the NLM Scrubber.
-   This includes allowing for preserving dates, ages over 89, (addresses coming soon), and specifying
-   a preserved terms or redacted terms file.
+1. The NLM Scrubber currently does not work on Macs. The docker version adds the ability to run the NLM scrubber on a Mac.
 
-2. It expands upon the NLM Scrubber functionality to allow preservation of SQL-formatted dates (e.g. 2022-09-22).
+2. It adds a pre-scrubbing step to convert files to ASCII text format, as v.19 of the NLM Scrubber is not compatible with UTF-8.
 
-# NLM Scrubber Wrappers
+3. It expands upon the NLM Scrubber functionality to allow preservation of SQL-formatted dates (e.g. 2022-09-22).
 
-This package includes three components-
+### Requirements
 
-1. A Docker container with NLM Scrubber already configured.
-2. A `scrub.sh` script to make using the docker container easier.
-3. A python library for dynamic deidentification.
+1. docker installation
+2. about 1GB of hard drive space
+3. Please ensure that you adhere to your organization's specific HIPAA regulations.
 
+### Running the Scrubber
 
-## Docker
+#### Examples
 
-The docker image can be downloaded from [docker hub](https://hub.docker.com/r/jewlsiob/nlm-scrubber) or built via `make build`.
+    docker run -it --rm --platform linux/amd64 -v /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_SQL_DATES=1" jewlsiob/nlm-scrubber:latest
 
-Once run the container will deidentify anything in `/tmp/once_off/input` and output it to `/tmp/once_off/output` (these directories are *inside* the container). The input files can be limited by defining the `SCRUBBER_REGEX` environmental variables.
+   -or-
 
-Mounting a local volume to `/tmp/once_off/input` and another to `/tmp/once_off/output` will allow you to deidentify and save items on your host machine.
+    docker run -it --rm --platform linux/amd64 -v  /Users/jewlsiob/my_project/nlp_input:/tmp/once_off/input -v  /Users/jewlsiob/my_project/nlp_output:/tmp/once_off/output --env "SCRUBBER_REGEX=*.csv" jewlsiob/nlm-scrubber:latest
 
-You can mount a local volume to `/tmp/once_off/preserved.nci2.txt` or `/tmp/once_off/redacted.nci2.txt` to add addition terms to preserve or redact form the document.
+#### Details
+1. Download the docker image from [docker hub](https://hub.docker.com/r/jewlsiob/nlm-scrubber)
+2. Make a directory where docker can output the scrubbed data. You must *bind* this directory to the
+   docker internal output directory. e.g.
 
-You also can choose to define the environment variables `KEEP_DATES`, `KEEP_ADDRESSES`, or `KEEP_AGES` (for ages over 89). If you define them, these flags will be set in the config file, turning off the redaction of those elements.
+       -v  /Users/jewlsiob/my_project/nlp_output:/tmp/once_off/output
+3. You must *bind* the directory where your HIPAA documents live to the internal docker directory. e.g.
 
-`KEEP_SQL_DATES` preserves sql-formatted dates as well -- e.g. 2022-09-22.
+       -v  /Users/jewlsiob/my_project/nlp_input:/tmp/once_off/input
+4. You may specify the following environment variables when running the docker image:
 
-Example call:
+   1. `--env "KEEP_DATES=1"`. Preserves dates in the files.
 
-    docker run -it --rm --platform linux/amd64 -v  /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_AGES=1" jewlsiob/nlm-scrubber:latest
+   2. `--env "KEEP_SQL_DATES=1"`. Preserves SQL-format dates in the files (e.g. 2022-09-22).
 
-### FAQs
-* The scrubber requires files to be ASCII encoded.  If nothing happens with a file, it could be in the wrong format.
-* KEEP_DATES: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
+   3. `--env "KEEP_AGES=1"`. Preserves the age of patients over 89 years old.
 
-## scrub.sh
+   4. `--env "KEEP_ADDRESSES=1"`. Preserves addresses. **NOTE:** This functionality is currently awaiting clarification
+   from the NLM before it can be functional.
 
-This script wraps around the docker container, automatically mounting the supplied directories into the container so their contents can be deidentified.
+   5. `--env "SCRUBBER_REGEX=*.csv"`. Allows you to narrow down what file types are processed by the NLM scrubber.
 
-To deidentify any json files from `testing/input` into the directory `testing/output` you'd run this command-
+5. You may create a file with custom terms you wish to preserve when scrubbing the data.
+   In order for docker to use this file,
+   you must "mount the local volume" (i.e. this text file) to `/tmp/once_off/preserved.nci2.txt`. e.g.
 
-```
-./scrub.sh testing/input/ testing/output/ .\*.json
-```
+       -v /Users/jewlsiob/my_project/preserved.txt:/tmp/once_off/preserved.nci2.txt
+6. You may create a file with custom terms you wish to exclude when scrubbing the data.
+   In order for docker to use this file,
+   you must "mount the local volume" (i.e. this text file) to `/tmp/once_off/redacted.nci2.txt`. e.g.
 
-Note that the NLM Scrubber does leave metadata at the bottom of each file- this would have to be removed before parsing the json.
+       -v /Users/jewlsiob/my_project/my_redacted_v2.txt:/tmp/once_off/redacted.nci2.txt
 
+#### Output
 
-## pyscrubber
+The NLM Scrubber outputs files with an additional suffix of *.LDS.* if the file preserved dates, older ages or addresses.
+Otherwise, the suffix is *.npi.*. Some additional processing information is added to the bottom of each file.
 
-This library does not use the docker container and depends on the nlm-scrubber being installed in `/opt/nlm_scrubber`.
+### Troubleshooting
+1. If you are getting no files in the output folder, there is likely an error in the format of the file.
+     1. The scrubber requires files to be ASCII encoded. Use the **TODO IOB** option to convert files to ascii format.
+     2. Sometimes saving in Excel or other processing leaves unreadable bytes (e.g. an extra 0x9d).
+        If this occurs, try exporting the file to txt.
+2. KEEP_DATES: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
+3. *Advanced*. You can attach to the terminal of an actively running docker instance to troubleshoot from there.
+   If you have docker desktop, simply click on "containers" and the little terminal icon there.
+   Running something like `cat /tmp/once_off/redacted.nci2.txt` will show you if your redacted file is properly mounted.
+   You can also actively change a config file if you do it quickly while the NLM Scrubber is still loading.
 
-To work with the `nlm_scrubber` application this library dynamically generates a config, writes all of the supplied strings to disk, and then reads the outputted data back before erasing all of the files it wrote.
+### Editing the code
 
-There is a significant delay when the application is being loaded- as such it is far more efficient to batch data than to run it through individually.
+You can build the docker container locally via `make build`.
+Please note that this command will not work on a Mac since the NLM Scrubber does not work on a Mac.
 
-## Credits
+### Acknowledgements
 
-This package builds upon and extends upon the great work of [radaisystems/nlm-scrubber-docker](https://github.com/radaisystems/nlm-scrubber-docker)!
+1. Kayaalp, M., Sagan, P., Browne, A.C., McDonald, C.J. (2016). Guidelines for Annotating Personal Identifiers in the
+   Clinical Text Repository of the National Institutes of Health (version 6/28/2016). Lister Hill National Center for
+   Biomedical Communications, U.S. National Library of Medicine, National Institutes of Health, Bethesda, Maryland.
+2. This package builds upon and extends upon the great work of
+   [radaisystems/nlm-scrubber-docker](https://github.com/radaisystems/nlm-scrubber-docker)

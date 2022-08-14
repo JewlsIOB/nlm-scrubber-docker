@@ -5,7 +5,7 @@ NLM_LINUX_VERSION=19.0403
 NLM_URL:=https://scrubber.nlm.nih.gov/files/linux/scrubber.19.0403L.zip
 NLM_WINDOWS_VERSION=19.0411
 NLM_WINDOWS_URL:=https://scrubber.nlm.nih.gov/files/windows/scrubber.19.0411W.zip
-IMAGE_NAME:=radaisystems/nlm-scrubber
+IMAGE_NAME:=jewlsiob/nlm-scrubber
 
 
 all: test_build
