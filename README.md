@@ -1,4 +1,4 @@
-# HIPAA Scrubbing
+# Clinical Text De-identification
 
 This package provides a docker wrapper to v.19 of the [National Library of Medicine HIPAA scrubber](https://scrubber.nlm.nih.gov/).
 It allows you to remove in bulk HIPAA information from medical documentation in various text/csv formats.
