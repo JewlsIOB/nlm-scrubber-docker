@@ -1,7 +1,7 @@
 # Clinical Text De-identification
 
 This package provides a docker wrapper to v.19 of the [National Library of Medicine HIPAA scrubber](https://scrubber.nlm.nih.gov/).
-It allows you to remove in bulk HIPAA information from medical documentation in various text/csv formats.
+It allows you to remove in bulk identifying information from medical documentation in various text/csv formats.
 
 The Docker image adds some additional functionality on top of the NLM Scrubber:
 
@@ -25,7 +25,7 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
    docker internal output directory. e.g.
 
        -v  /Users/jewlsiob/my_project/nlp_output:/tmp/once_off/output
-3. You must *bind* the directory where your HIPAA documents live to the internal docker directory. e.g.
+3. You must *bind* the directory where your clinical text documents live to the internal docker directory. e.g.
 
        -v  /Users/jewlsiob/my_project/nlp_input:/tmp/once_off/input
 4. You may specify the following environment variables when running the docker image:
