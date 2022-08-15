@@ -73,11 +73,13 @@ Otherwise, the suffix is *.nphi.*. Some additional processing information is add
         to convert files to ascii format.
      2. Sometimes saving in Excel or other processing leaves unreadable bytes (e.g. an extra 0x9d).
         If this occurs, try exporting the file to txt.
-2. `KEEP_DATES`. Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
-3. `CONVERT_TO_ASCII`. If the ascii conversion isn't doing quite what you want, you can instead do this conversion locally.
+2. *Slowness*. This is complicated work! If you have a very large file, Docker can take 30+ minutes to run.
+   Try running a smaller file first to ensure everything is working properly.
+3. `KEEP_DATES`. Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
+4. `CONVERT_TO_ASCII`. If the ascii conversion isn't doing quite what you want, you can instead do this conversion locally.
    For ideas, take a look at the code we use for the conversion:
    [convert_to_ascii.py](https://github.com/JewlsIOB/nlm-scrubber-docker/tree/master/docker/addons/convert_to_ascii.py)
-4. *Advanced*. You can attach to the terminal of an actively running docker instance to troubleshoot.
+5. *Advanced*. You can attach to the terminal of an actively running docker instance to troubleshoot.
    If you have docker desktop, simply click on "containers" and the little terminal icon there.
    Running something like `cat /tmp/once_off/redacted.nci2.txt` will show you if your redacted file is properly mounted.
    You can also actively change a config file if you do it quickly while the NLM Scrubber is still loading.
