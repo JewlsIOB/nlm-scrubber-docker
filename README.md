@@ -13,8 +13,8 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
 ## Requirements
 
-1. docker installation
-2. about 1GB of hard drive space
+1. Docker installation.
+2. About 1GB of hard drive space.
 3. Please ensure that you adhere to your organization's specific HIPAA regulations.
 
 ## Running the Scrubber
