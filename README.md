@@ -69,7 +69,8 @@ Otherwise, the suffix is *.npi.*. Some additional processing information is adde
 
 ### Troubleshooting
 1. If you are getting no files in the output folder, there is likely an error in the format of the file.
-     1. The scrubber requires files to be ASCII encoded. Use the **TODO IOB** option to convert files to ascii format.
+     1. The scrubber requires files to be ASCII encoded. Use the `CONVERT_TO_ASCII=1` environment variable
+        to convert files to ascii format.
      2. Sometimes saving in Excel or other processing leaves unreadable bytes (e.g. an extra 0x9d).
         If this occurs, try exporting the file to txt.
 2. KEEP_DATES: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
