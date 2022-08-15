@@ -13,21 +13,13 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
 ## Requirements
 
-1. Docker installation.
-2. About 1GB of hard drive space.
-3. Please ensure that you adhere to your organization's specific HIPAA regulations.
+1. Docker installation.  Download from https://www.docker.com/
+2. About 1GB of hard drive space to download the Docker image from [docker hub](https://hub.docker.com/r/jewlsiob/nlm-scrubber)
+3. Please ensure you adhere to your organization's specific HIPAA regulations.
 
 ## Running the Scrubber
 
-#### Examples
-
-    docker run -it --rm --platform linux/amd64 -v /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "CONVERT_TO_ASCII=1" --env "KEEP_DATES=1" --env "KEEP_SQL_DATES=1" jewlsiob/nlm-scrubber:latest
-
-   -or-
-
-    docker run -it --rm --platform linux/amd64 -v  /Users/jewlsiob/my_project/nlp_input:/tmp/once_off/input -v  /Users/jewlsiob/my_project/nlp_output:/tmp/once_off/output --env "SCRUBBER_REGEX=*.csv" jewlsiob/nlm-scrubber:latest
-
-#### Details
+### Details
 1. Download the docker image from [docker hub](https://hub.docker.com/r/jewlsiob/nlm-scrubber)
 2. Make a directory where docker can output the scrubbed data. You must *bind* this directory to the
    docker internal output directory. e.g.
@@ -62,7 +54,15 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
        -v /Users/jewlsiob/my_project/my_redacted_v2.txt:/tmp/once_off/redacted.nci2.txt
 
-#### Output
+### Examples
+
+    docker run -it --rm --platform linux/amd64 -v /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "CONVERT_TO_ASCII=1" --env "KEEP_DATES=1" --env "KEEP_SQL_DATES=1" jewlsiob/nlm-scrubber:latest
+
+-or-
+
+    docker run -it --rm --platform linux/amd64 -v  /Users/jewlsiob/my_project/nlp_input:/tmp/once_off/input -v  /Users/jewlsiob/my_project/nlp_output:/tmp/once_off/output --env "SCRUBBER_REGEX=*.csv" jewlsiob/nlm-scrubber:latest
+
+### Output
 
 The NLM Scrubber outputs files with an additional suffix of *.LDS.* if the file preserved dates, older ages or addresses.
 Otherwise, the suffix is *.nphi.*. Some additional processing information is added to the bottom of each file.
