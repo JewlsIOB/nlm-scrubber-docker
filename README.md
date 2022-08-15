@@ -21,7 +21,7 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
 #### Examples
 
-    docker run -it --rm --platform linux/amd64 -v /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "KEEP_DATES=1" --env "KEEP_SQL_DATES=1" jewlsiob/nlm-scrubber:latest
+    docker run -it --rm --platform linux/amd64 -v /tmp/nlp_input:/tmp/once_off/input -v /tmp/nlp_output:/tmp/once_off/output --env "CONVERT_TO_ASCII=1" --env "KEEP_DATES=1" --env "KEEP_SQL_DATES=1" jewlsiob/nlm-scrubber:latest
 
    -or-
 
@@ -49,6 +49,8 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
    5. `--env "SCRUBBER_REGEX=*.csv"`. Allows you to narrow down what file types are processed by the NLM scrubber.
 
+   6. `--env "CONVERT_TO_ASCII=1"`. Tells docker to convert the files in the input directory from UTF-8 to ascii.
+
 5. You may create a file with custom terms you wish to preserve when scrubbing the data.
    In order for docker to use this file,
    you must "mount the local volume" (i.e. this text file) to `/tmp/once_off/preserved.nci2.txt`. e.g.
@@ -71,7 +73,10 @@ Otherwise, the suffix is *.npi.*. Some additional processing information is adde
      2. Sometimes saving in Excel or other processing leaves unreadable bytes (e.g. an extra 0x9d).
         If this occurs, try exporting the file to txt.
 2. KEEP_DATES: Dates in the format 2022-09-22 are considered to be alphanumeric instead of dates, so add the KEEP_SQL_DATES flag to retain these.
-3. *Advanced*. You can attach to the terminal of an actively running docker instance to troubleshoot from there.
+3. *Intermediate*. If the ascii conversion isn't doing quite what you want, you can instead do this conversion locally.
+   You can work from the code in:
+   [convert_to_ascii.py](https://github.com/JewlsIOB/nlm-scrubber-docker/tree/master/docker/addons/convert_to_ascii.py).
+4. *Advanced*. You can attach to the terminal of an actively running docker instance to troubleshoot from there.
    If you have docker desktop, simply click on "containers" and the little terminal icon there.
    Running something like `cat /tmp/once_off/redacted.nci2.txt` will show you if your redacted file is properly mounted.
    You can also actively change a config file if you do it quickly while the NLM Scrubber is still loading.

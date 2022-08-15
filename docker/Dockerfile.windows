@@ -17,4 +17,9 @@ RUN chmod +x /opt/pyscrubber.py
 COPY docker/entrypoint.sh /opt/entrypoint.sh
 RUN chmod +x /opt/entrypoint.sh
 
+COPY docker/addons/sql_dates.nci2.txt /opt/sql_dates.nci2.txt
+
+COPY docker/addons/convert_to_ascii.py /opt/convert_to_ascii.py
+RUN chmod +x /opt/convert_to_ascii.py
+
 ENTRYPOINT ["/opt/entrypoint.sh"]
