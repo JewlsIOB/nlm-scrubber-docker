@@ -36,8 +36,7 @@ The Docker image adds some additional functionality on top of the NLM Scrubber:
 
    3. `--env "KEEP_AGES=1"`. Preserves the age of patients over 89 years old.
 
-   4. `--env "KEEP_ADDRESSES=1"`. Preserves addresses. **NOTE:** This functionality is currently awaiting clarification
-   from the NLM before it can be functional.
+   4. `--env "KEEP_ADDRESSES=1"`. Preserves city and state portion of addresses.
 
    5. `--env "SCRUBBER_REGEX=*.csv"`. Allows you to narrow down what file types are processed by the NLM scrubber.
 
