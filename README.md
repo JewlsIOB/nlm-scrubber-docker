@@ -86,7 +86,7 @@ Otherwise, the suffix is *.nphi.*. Some additional processing information is add
 ## Editing the code
 
 You can build the docker container locally via `make build`.
-Please note that this command will not work on a Mac since the NLM Scrubber does not work on a Mac.
+Please note that this command will not work on a Mac since the NLM Scrubber does not work on a Mac. I recommend Linux, but Windows should work as well (just ensure the build is compatible with Linux/Mac!)
 
 ## Acknowledgements
 
